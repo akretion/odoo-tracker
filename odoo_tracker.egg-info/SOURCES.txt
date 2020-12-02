@@ -1,0 +1,9 @@
+README.rst
+setup.py
+odoo_tracker/__init__.py
+odoo_tracker/main.py
+odoo_tracker.egg-info/PKG-INFO
+odoo_tracker.egg-info/SOURCES.txt
+odoo_tracker.egg-info/dependency_links.txt
+odoo_tracker.egg-info/requires.txt
+odoo_tracker.egg-info/top_level.txt

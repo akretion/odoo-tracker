@@ -1,0 +1,56 @@
+Metadata-Version: 2.1
+Name: odoo-tracker
+Version: 0.1.dev0+d20201202
+Summary: Tracker with csv output for odoo
+Home-page: http://github.com/akretion/odootracker
+Author: Akretion
+Author-email: contact@akretion.com
+License: AGPLv3+
+Description: Simple tracker for perf analyse for odoo
+        =============================================
+        
+        
+        Example of use with click-odoo
+        
+        .. code-block:: python
+        
+           #!/usr/bin/env python3
+        
+           import click
+           import click_odoo
+           from odoo import models
+           from odoo_tracker import tracker, profile_call
+        
+           models.Model.search = tracker(models.Model.search)
+        
+        
+           @click.command()
+           @click_odoo.env_options(default_log_level="info")
+           def main(env):
+                patterned = env["pattern.file"].browse(163)
+                profile_call(
+                    # name of the directory where the anylyse will be generated
+                    "result",
+                    # name of the file generated
+                    "pattern",
+                    # method that should be called
+                    env["pattern.config"].browse(16)._generate_import_with_pattern_job,
+                    # params for the method, you can pass an args and kwargs
+                    patterned)
+                env.cr.rollback()
+        
+            if __name__ == '__main__':
+                main()
+        
+        
+        # 0.0.x
+        
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Framework :: Odoo
+Description-Content-Type: text/x-rst
