@@ -11,6 +11,7 @@ import csv
 import subprocess
 from os import path
 import os
+import psycopg2
 
 
 class TrackerOuput(object):
@@ -63,8 +64,12 @@ def tracker(func):
             model = self._name if hasattr(self, "_name") else self.__class__
             if str(self.__class__) == "<class 'odoo.sql_db.Cursor'>" and func.__name__ == "execute":
                 query = args[0]
-                params = kwargs.get("params")
-                args = self.mogrify(query, params)
+                if len(args) > 1:
+                    params = args[1]
+                else:
+                    params = kwargs.get("params")
+                encoding = psycopg2.extensions.encodings[self.connection.encoding]
+                args = self.mogrify(query, params).decode(encoding, 'replace')
                 kwargs = None
             data = {
                 'model': model,
