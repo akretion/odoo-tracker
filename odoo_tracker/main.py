@@ -60,13 +60,19 @@ def tracker(func):
         result = func(self, *args, **kwargs)
         duration = time_now() - start
         if tracker_output.ready():
-            tracker_output.writerow({
-                'model': self._name,
+            model = self._name if hasattr(self, "_name") else self.__class__
+            if str(self.__class__) == "<class 'odoo.sql_db.Cursor'>" and func.__name__ == "execute":
+                query = args[0]
+                params = kwargs.get("params")
+                args = self.mogrify(query, params)
+                kwargs = None
+            data = {
+                'model': model,
                 'method': func.__name__,
-                'duration': duration,
+                'duration': round(duration, 4),
                 'args': args,
                 'kwargs': kwargs,
-                })
+                }
+            tracker_output.writerow(data)
         return result
     return wrapper
-
